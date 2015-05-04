@@ -1,0 +1,48 @@
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'idea'
+apply plugin: 'com.bmuschko.tomcat'
+
+
+version = '1.0'
+
+// Uses JDK 7
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+
+// 1. Get dependencies from Maven local repository
+// 2. Get dependencies from Maven central repository
+repositories {
+	mavenLocal()
+    mavenCentral()
+}
+
+//Project dependencies
+dependencies {
+    compile(
+        'ch.qos.logback:logback-classic:1.1.2',
+        'org.springframework:spring-webmvc:4.1.6.RELEASE',
+        'jstl:jstl:1.2'
+    )
+	//include in compile only, exclude in the war
+	providedCompile(
+        'javax.servlet:servlet-api:2.5'
+    )
+    //tomcat plugin
+    def tomcatVersion = '7.0.59'
+    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+            "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
+            "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
+}
+
+//gradle tomcat plugin
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.bmuschko:gradle-tomcat-plugin:2.1'
+    }
+}
